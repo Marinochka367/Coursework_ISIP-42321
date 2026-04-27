@@ -1,0 +1,34 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <h1>Админ-панель</h1>
+  <%- include('../partials/flash') %>
+
+  <div class="admin-nav">
+    <a class="category-chip" href="/admin/categories">Категории</a>
+    <a class="category-chip" href="/admin/products">Товары</a>
+    <a class="category-chip" href="/admin/promotions">Акции</a>
+    <a class="category-chip" href="/admin/orders">Заказы</a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="summary-card"><h3>Пользователи</h3><p><strong><%= totalUsers %></strong></p></div>
+    <div class="summary-card"><h3>Заказы</h3><p><strong><%= stats.totalOrders %></strong></p></div>
+    <div class="summary-card"><h3>Выручка</h3><p><strong><%= Number(stats.totalRevenue).toLocaleString('ru-RU') %> ₽</strong></p></div>
+    <div class="summary-card"><h3>Товаров в срезе</h3><p><strong><%= products.length %></strong></p></div>
+  </div>
+
+  <div class="summary-card">
+    <h2>Быстрый обзор</h2>
+    <p>Категорий: <strong><%= categories.length %></strong></p>
+    <p>Акций: <strong><%= promotions.length %></strong></p>
+    <p>Товаров в последнем срезе: <strong><%= products.length %></strong></p>
+    <div class="actions-row">
+      <a href="/admin/orders" class="btn">Перейти к заказам</a>
+      <a href="/admin/products" class="btn btn-secondary">Управление товарами</a>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

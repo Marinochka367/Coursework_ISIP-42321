@@ -1,0 +1,34 @@
+<%- include('partials/head', { title }) %>
+<%- include('partials/header') %>
+
+<main class="container page-section">
+  <section class="hero">
+    <div>
+      <h1>Свежие цветы и авторские букеты с доставкой</h1>
+      <p>Оформите заказ онлайн и подарите эмоции уже сегодня.</p>
+      <a href="/products" class="btn">Перейти в каталог</a>
+    </div>
+  </section>
+
+  <%- include('partials/flash') %>
+
+  <section class="page-section">
+    <h2>Категории</h2>
+    <div class="category-list">
+      <% categories.forEach((category) => { %>
+        <a class="category-chip" href="/products?category=<%= category.slug %>"><%= category.name %></a>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="page-section">
+    <h2>Популярные товары</h2>
+    <div class="product-grid">
+      <% featuredProducts.forEach((product) => { %>
+        <%- include('partials/product-card', { product }) %>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

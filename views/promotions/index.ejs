@@ -1,0 +1,26 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <h1>Акции и скидки</h1>
+  <div class="promo-grid">
+    <% if (promotions.length) { %>
+      <% promotions.forEach((promotion) => { %>
+        <div class="summary-card">
+          <h3><%= promotion.title %></h3>
+          <p><%= promotion.description %></p>
+          <p>Скидка:
+            <strong><%= promotion.discount_type === 'percent' ? `${promotion.discount_value}%` : `${Number(promotion.discount_value).toLocaleString('ru-RU')} ₽` %></strong>
+          </p>
+          <% if (promotion.promo_code) { %><p>Промокод: <strong><%= promotion.promo_code %></strong></p><% } %>
+          <% if (promotion.product_name) { %><p>Товар: <%= promotion.product_name %></p><% } %>
+          <p>Действует до: <%= new Date(promotion.ends_at).toLocaleDateString('ru-RU') %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>Сейчас активных акций нет.</p>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

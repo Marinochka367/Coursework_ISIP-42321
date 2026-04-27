@@ -1,0 +1,18 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section narrow">
+  <h1>Регистрация</h1>
+  <%- include('../partials/flash') %>
+
+  <form action="/auth/register" method="POST" class="form-card">
+    <label>ФИО <input type="text" name="fullName" value="<%= old.fullName || '' %>" required /></label>
+    <label>Email <input type="email" name="email" value="<%= old.email || '' %>" required /></label>
+    <label>Пароль <input type="password" name="password" required /></label>
+    <label>Телефон <input type="text" name="phone" value="<%= old.phone || '' %>" /></label>
+    <label>Адрес <textarea name="address" rows="3"><%= old.address || '' %></textarea></label>
+    <button type="submit" class="btn">Создать аккаунт</button>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

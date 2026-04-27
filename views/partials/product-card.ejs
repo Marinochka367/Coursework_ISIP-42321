@@ -1,0 +1,16 @@
+<div class="product-card">
+  <a href="/products/<%= product.slug %>">
+    <img src="<%= product.image %>" alt="<%= product.name %>" class="product-card-image" />
+  </a>
+  <div class="product-card-body">
+    <span class="badge"><%= product.category_name %></span>
+    <h3><a href="/products/<%= product.slug %>"><%= product.name %></a></h3>
+    <p class="product-card-price"><%= Number(product.price).toLocaleString('ru-RU') %> ₽</p>
+    <p class="product-card-text"><%= product.description %></p>
+    <form action="/cart/add" method="POST">
+      <input type="hidden" name="productId" value="<%= product.id %>" />
+      <input type="hidden" name="quantity" value="1" />
+      <button type="submit" class="btn">В корзину</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section narrow">
+  <h1>Редактирование профиля</h1>
+  <%- include('../partials/flash') %>
+
+  <form action="/profile/edit" method="POST" class="form-card">
+    <label>ФИО <input type="text" name="fullName" value="<%= user.full_name %>" required /></label>
+    <label>Телефон <input type="text" name="phone" value="<%= user.phone || '' %>" /></label>
+    <label>Адрес <textarea name="address" rows="4"><%= user.address || '' %></textarea></label>
+    <button type="submit" class="btn">Сохранить</button>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

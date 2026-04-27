@@ -1,0 +1,28 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <h1>История заказов</h1>
+  <%- include('../partials/flash') %>
+
+  <% if (!orders.length) { %>
+    <p>У вас пока нет заказов.</p>
+  <% } else { %>
+    <% orders.forEach((order) => { %>
+      <div class="summary-card order-card">
+        <h3>Заказ #<%= order.id %></h3>
+        <p>Дата: <%= new Date(order.created_at).toLocaleString('ru-RU') %></p>
+        <p>Статус: <%= order.status %></p>
+        <p>Сумма: <%= Number(order.total_amount).toLocaleString('ru-RU') %> ₽</p>
+        <% if (order.promo_code) { %><p>Промокод: <%= order.promo_code %></p><% } %>
+        <ul>
+          <% order.items.forEach((item) => { %>
+            <li><%= item.product_name %> — <%= item.quantity %> × <%= Number(item.unit_price).toLocaleString('ru-RU') %> ₽</li>
+          <% }) %>
+        </ul>
+      </div>
+    <% }) %>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

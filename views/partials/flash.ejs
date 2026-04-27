@@ -1,0 +1,36 @@
+<% if (success && success.length) { %>
+  <div class="flash-stack">
+  <div class="flash flash-success" role="status" aria-live="polite">
+    <% success.forEach((message) => { %>
+      <p><%= message %></p>
+    <% }) %>
+  </div>
+  </div>
+<% } %>
+
+<% if (error && error.length) { %>
+  <div class="flash-stack">
+  <div class="flash flash-error" role="alert" aria-live="assertive">
+    <% error.forEach((message) => { %>
+      <p><%= message %></p>
+    <% }) %>
+  </div>
+  </div>
+<% } %>
+
+<script>
+  (function initToastFlash() {
+    const toasts = document.querySelectorAll('.flash-stack .flash');
+    toasts.forEach((toast) => {
+      setTimeout(() => {
+        toast.classList.add('flash-hide');
+      }, 3200);
+      toast.addEventListener('transitionend', () => {
+        const parent = toast.parentElement;
+        if (parent && parent.classList.contains('flash-stack')) {
+          parent.remove();
+        }
+      });
+    });
+  })();
+</script>

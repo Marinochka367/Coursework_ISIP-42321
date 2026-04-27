@@ -1,0 +1,28 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <%- include('../partials/flash') %>
+
+  <div class="product-detail">
+    <img src="<%= product.image %>" alt="<%= product.name %>" class="product-detail-image" />
+    <div>
+      <span class="badge"><%= product.category_name %></span>
+      <h1><%= product.name %></h1>
+      <p class="product-card-price"><%= Number(product.price).toLocaleString('ru-RU') %> ₽</p>
+      <p><%= product.description %></p>
+      <p>В наличии: <strong><%= product.stock %></strong></p>
+
+      <form action="/cart/add" method="POST" class="add-to-cart-form">
+        <input type="hidden" name="productId" value="<%= product.id %>" />
+        <label>
+          Количество
+          <input type="number" name="quantity" min="1" max="<%= Math.max(1, Number(product.stock)) %>" value="1" />
+        </label>
+        <button type="submit" class="btn">Добавить в корзину</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

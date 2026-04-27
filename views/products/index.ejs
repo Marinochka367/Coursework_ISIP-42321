@@ -1,0 +1,61 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <h1>Каталог товаров</h1>
+  <%- include('../partials/flash') %>
+
+  <form method="GET" action="/products" class="search-form search-form-wide catalog-search catalog-toolbar">
+    <input type="text" name="search" placeholder="Поиск по названию или описанию" value="<%= search %>" />
+    <input type="number" name="minPrice" min="0" step="1" placeholder="Цена от" value="<%= filters.minPrice %>" />
+    <input type="number" name="maxPrice" min="0" step="1" placeholder="Цена до" value="<%= filters.maxPrice %>" />
+    <select name="sort">
+      <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Сначала новые</option>
+      <option value="price_asc" <%= filters.sort === 'price_asc' ? 'selected' : '' %>>Сначала дешевле</option>
+      <option value="price_desc" <%= filters.sort === 'price_desc' ? 'selected' : '' %>>Сначала дороже</option>
+      <option value="name_asc" <%= filters.sort === 'name_asc' ? 'selected' : '' %>>По названию (А-Я)</option>
+    </select>
+    <% if (activeCategory) { %>
+      <input type="hidden" name="category" value="<%= activeCategory %>" />
+    <% } %>
+    <button type="submit" class="btn btn-secondary">Найти</button>
+    <a
+      href="/products<%= activeCategory ? `?category=${encodeURIComponent(activeCategory)}` : '' %>"
+      class="btn btn-link"
+    >Сбросить</a>
+  </form>
+
+  <div class="filters">
+    <a
+      href="/products?search=<%= encodeURIComponent(search || '') %>&minPrice=<%= encodeURIComponent(filters.minPrice || '') %>&maxPrice=<%= encodeURIComponent(filters.maxPrice || '') %>&sort=<%= encodeURIComponent(filters.sort || 'newest') %>"
+      class="category-chip <%= !activeCategory ? 'active' : '' %>"
+    >Все</a>
+    <% categories.forEach((category) => { %>
+      <a
+        href="/products?category=<%= category.slug %>&search=<%= encodeURIComponent(search || '') %>&minPrice=<%= encodeURIComponent(filters.minPrice || '') %>&maxPrice=<%= encodeURIComponent(filters.maxPrice || '') %>&sort=<%= encodeURIComponent(filters.sort || 'newest') %>"
+        class="category-chip <%= activeCategory === category.slug ? 'active' : '' %>"
+      ><%= category.name %></a>
+    <% }) %>
+  </div>
+
+  <div class="product-grid">
+    <% if (products.length) { %>
+      <% products.forEach((product) => { %>
+        <%- include('../partials/product-card', { product }) %>
+      <% }) %>
+    <% } else { %>
+      <p>По выбранному фильтру товары не найдены.</p>
+    <% } %>
+  </div>
+
+  <div class="pagination">
+    <% pagination.pages.forEach((pageNumber) => { %>
+      <a
+        href="/products?page=<%= pageNumber %>&category=<%= encodeURIComponent(activeCategory || '') %>&search=<%= encodeURIComponent(search || '') %>&minPrice=<%= encodeURIComponent(filters.minPrice || '') %>&maxPrice=<%= encodeURIComponent(filters.maxPrice || '') %>&sort=<%= encodeURIComponent(filters.sort || 'newest') %>"
+        class="category-chip <%= pagination.currentPage === pageNumber ? 'active' : '' %>"
+      ><%= pageNumber %></a>
+    <% }) %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

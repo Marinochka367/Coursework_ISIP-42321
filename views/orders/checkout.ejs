@@ -1,0 +1,134 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <h1>Оформление заказа</h1>
+  <%- include('../partials/flash') %>
+
+  <div class="checkout-layout">
+    <form action="/orders/checkout" method="POST" class="form-card">
+      <label>Имя получателя <input type="text" name="customerName" value="<%= user.full_name || '' %>" required /></label>
+      <label>Email <input type="email" name="customerEmail" value="<%= user.email || '' %>" required /></label>
+      <label>Телефон <input type="text" name="customerPhone" value="<%= user.phone || '' %>" required /></label>
+      <label class="address-field">
+        Адрес доставки
+        <input
+          type="text"
+          name="deliveryAddress"
+          id="deliveryAddress"
+          value="<%= user.address || '' %>"
+          autocomplete="off"
+          placeholder="Начните вводить адрес..."
+          required
+        />
+        <small class="address-help">Начните вводить улицу/дом, затем выберите подсказку.</small>
+        <div id="addressSuggestions" class="address-suggestions" hidden></div>
+      </label>
+      <label>
+        Способ оплаты
+        <select name="paymentMethod" required>
+          <option value="cash">Наличными при получении</option>
+          <option value="card">Картой курьеру</option>
+        </select>
+      </label>
+      <label>Промокод <input type="text" name="promoCode" placeholder="Например, BOUQUET10" /></label>
+      <label>Комментарий к заказу <textarea name="notes" rows="4"></textarea></label>
+      <button type="submit" class="btn">Подтвердить заказ</button>
+    </form>
+
+    <aside class="summary-card">
+      <h3>Ваш заказ</h3>
+      <% cart.items.forEach((item) => { %>
+        <div class="summary-row">
+          <span><%= item.name %> × <%= item.quantity %></span>
+          <span><%= Number(item.line_total).toLocaleString('ru-RU') %> ₽</span>
+        </div>
+      <% }) %>
+      <hr />
+      <div class="summary-row">
+        <strong>Сумма</strong>
+        <strong><%= Number(cart.subtotal).toLocaleString('ru-RU') %> ₽</strong>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script>
+  (function initAddressSuggest() {
+    const input = document.getElementById('deliveryAddress');
+    const list = document.getElementById('addressSuggestions');
+    if (!input || !list) return;
+
+    let debounceTimer = null;
+    let requestCounter = 0;
+
+    function hideSuggestions() {
+      list.hidden = true;
+      list.innerHTML = '';
+    }
+
+    function renderSuggestions(items) {
+      if (!items.length) {
+        hideSuggestions();
+        return;
+      }
+
+      list.innerHTML = '';
+      items.forEach((text) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'address-suggestion-item';
+        button.textContent = text;
+        button.addEventListener('click', () => {
+          input.value = text;
+          hideSuggestions();
+        });
+        list.appendChild(button);
+      });
+      list.hidden = false;
+    }
+
+    async function loadSuggestions(query, currentRequestId) {
+      try {
+        const response = await fetch(`/orders/address-suggest?q=${encodeURIComponent(query)}`);
+        if (!response.ok) {
+          hideSuggestions();
+          return;
+        }
+        const payload = await response.json();
+        if (currentRequestId !== requestCounter) return;
+        const suggestions = Array.isArray(payload.suggestions) ? payload.suggestions : [];
+        renderSuggestions(suggestions);
+      } catch (error) {
+        hideSuggestions();
+      }
+    }
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim();
+      requestCounter += 1;
+      const currentRequestId = requestCounter;
+
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+
+      if (query.length < 3) {
+        hideSuggestions();
+        return;
+      }
+
+      debounceTimer = setTimeout(() => {
+        loadSuggestions(query, currentRequestId);
+      }, 300);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!list.contains(event.target) && event.target !== input) {
+        hideSuggestions();
+      }
+    });
+  })();
+</script>
+
+<%- include('../partials/footer') %>

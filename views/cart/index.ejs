@@ -1,0 +1,45 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/header') %>
+
+<main class="container page-section">
+  <h1>Корзина</h1>
+  <%- include('../partials/flash') %>
+
+  <% if (!cartItems.length) { %>
+    <p>Корзина пуста.</p>
+  <% } else { %>
+    <div class="cart-list">
+      <% cartItems.forEach((item) => { %>
+        <div class="cart-item">
+          <img src="<%= item.image %>" alt="<%= item.name %>" class="cart-item-image" />
+          <div>
+            <h3><a href="/products/<%= item.slug %>"><%= item.name %></a></h3>
+            <p><%= Number(item.price).toLocaleString('ru-RU') %> ₽</p>
+          </div>
+          <form action="/cart/update" method="POST" class="cart-inline-form">
+            <input type="hidden" name="productId" value="<%= item.product_id %>" />
+            <input type="number" name="quantity" value="<%= item.quantity %>" min="0" max="99" />
+            <button type="submit" class="btn btn-secondary">Обновить</button>
+          </form>
+          <form action="/cart/remove" method="POST" class="cart-inline-form">
+            <input type="hidden" name="productId" value="<%= item.product_id %>" />
+            <input type="hidden" name="quantity" value="1" />
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+    <div class="summary-card">
+      <p>Сумма: <strong><%= Number(subtotal).toLocaleString('ru-RU') %> ₽</strong></p>
+      <p>Скидка: <strong><%= Number(discount).toLocaleString('ru-RU') %> ₽</strong></p>
+      <p>Итого: <strong><%= Number(total).toLocaleString('ru-RU') %> ₽</strong></p>
+      <% if (currentUser) { %>
+        <a href="/orders/checkout" class="btn">Оформить заказ</a>
+      <% } else { %>
+        <p>Для оформления заказа необходимо <a href="/auth/login">войти</a>.</p>
+      <% } %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

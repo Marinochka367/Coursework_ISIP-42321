@@ -1,0 +1,23 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">Flower Shop</a>
+    <nav class="nav">
+      <a href="/">Главная</a>
+      <a href="/products">Каталог</a>
+      <a href="/promotions">Акции</a>
+      <a href="/cart">Корзина (<%= cartCount %>)</a>
+
+      <% if (currentUser) { %>
+        <a href="/profile">Профиль</a>
+        <% if (currentUser.role === 'admin') { %>
+          <a href="/admin">Админ</a>
+        <% } %>
+        <form action="/auth/logout" method="POST" class="inline-form">
+          <button type="submit" class="btn btn-link">Выйти</button>
+        </form>
+      <% } else { %>
+        <a href="/auth/login">Вход</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
