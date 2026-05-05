@@ -29,8 +29,8 @@ class ProductController {
     try {
       const category = (req.query.category || '').trim();
       const search = (req.query.search || '').trim();
-      const minPrice = this.normalizePrice(req.query.minPrice);
-      const maxPrice = this.normalizePrice(req.query.maxPrice);
+      const minPrice = ProductController.normalizePrice(req.query.minPrice);
+      const maxPrice = ProductController.normalizePrice(req.query.maxPrice);
       const sort = (req.query.sort || 'newest').trim();
       const page = normalizePage(req.query.page);
       const totalItems = await ProductModel.countProducts({
