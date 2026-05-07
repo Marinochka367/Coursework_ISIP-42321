@@ -18,8 +18,8 @@
 --
 -- Table structure for table `cart`
 --
-Create database flower_shop
-
+Create database flower_shop;
+use flower_shop;
 DROP TABLE IF EXISTS `cart`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
